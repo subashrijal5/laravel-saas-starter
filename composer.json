@@ -68,9 +68,16 @@
         "test:lint": [
             "pint --parallel --test"
         ],
+        "refactor": [
+            "rector"
+        ],
+        "test:refactor": [
+            "rector --dry-run"
+        ],
         "test": [
             "@php artisan config:clear --ansi",
             "@test:lint",
+            "@test:refactor",
             "@php artisan test"
         ],
         "post-autoload-dump": [
