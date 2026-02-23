@@ -163,3 +163,11 @@ php artisan test --compact
 ```bash
 composer run dev
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+MIT -- see [LICENSE](LICENSE) for details.
