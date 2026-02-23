@@ -48,6 +48,26 @@ test('existing user receives notification when invited', function () {
     Notification::assertSentTo($invitee, OrganizationInvitationNotification::class);
 });
 
+test('existing user receives database notification when invited', function () {
+    Notification::fake();
+
+    $owner = User::factory()->create();
+    $invitee = User::factory()->create(['email' => 'dbnotif@example.com']);
+    $organization = Organization::factory()->create(['owner_id' => $owner->id]);
+    $organization->members()->attach($owner, ['role' => 'owner']);
+    $owner->switchOrganization($organization);
+
+    $this->actingAs($owner)
+        ->post(route('organizations.invitations.store', $organization), [
+            'email' => 'dbnotif@example.com',
+            'role' => 'member',
+        ]);
+
+    Notification::assertSentTo($invitee, OrganizationInvitationNotification::class, function ($notification, $channels) {
+        return in_array('database', $channels) && in_array('mail', $channels);
+    });
+});
+
 test('cannot invite an existing member', function () {
     $owner = User::factory()->create();
     $member = User::factory()->create();

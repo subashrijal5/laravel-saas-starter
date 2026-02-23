@@ -74,6 +74,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Configure when in-app notifications are triggered. Usage thresholds
+    | are percentages (e.g. [80, 90] sends alerts at 80% and 90% usage).
+    | Plan expiry days specify how many days before expiry to notify.
+    |
+    */
+
+    'notifications' => [
+        'usage_thresholds' => [80, 90],
+        'plan_expiry_days_before' => [7, 3, 1],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache
     |--------------------------------------------------------------------------
     |
