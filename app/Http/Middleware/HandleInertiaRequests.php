@@ -3,7 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -50,9 +54,53 @@ class HandleInertiaRequests extends Middleware
                     ->get() ?? [],
                 'organization_permissions' => $user?->resolveOrganizationPermissions() ?? [],
                 'billing' => $this->billingData($user?->currentOrganization),
+                'notifications' => $this->notificationSummary($user),
             ],
+            'recent_notifications' => $user
+                ? Inertia::defer(fn () => $this->recentNotifications($user))
+                : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * Lightweight count cached for 60 seconds — safe for every request.
+     *
+     * @return array{unread_count: int}|null
+     */
+    protected function notificationSummary(?User $user): ?array
+    {
+        if (! $user) {
+            return null;
+        }
+
+        $count = Cache::remember(
+            "notifications:unread:{$user->id}",
+            60,
+            fn () => $user->unreadNotifications()->count(),
+        );
+
+        return ['unread_count' => $count];
+    }
+
+    /**
+     * Fetched via a deferred request after initial page render.
+     *
+     * @return list<array<string, mixed>>
+     */
+    protected function recentNotifications(User $user): array
+    {
+        return $user->unreadNotifications()
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(fn (DatabaseNotification $notification) => [
+                'id' => $notification->id,
+                'data' => $notification->data,
+                'created_at' => $notification->created_at->toISOString(),
+                'read_at' => $notification->read_at?->toISOString(),
+            ])
+            ->all();
     }
 
     /**
@@ -72,5 +120,10 @@ class HandleInertiaRequests extends Middleware
             'is_on_trial' => $organization->onTrial(),
             'trial_ends_at' => $organization->trialEndsAt()?->toISOString(),
         ];
+    }
+
+    public static function clearNotificationCache(int $userId): void
+    {
+        Cache::forget("notifications:unread:{$userId}");
     }
 }

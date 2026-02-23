@@ -20,3 +20,4 @@ Route::get('dashboard', function () {
 require __DIR__.'/settings.php';
 require __DIR__.'/organization.php';
 require __DIR__.'/billing.php';
+require __DIR__.'/notifications.php';

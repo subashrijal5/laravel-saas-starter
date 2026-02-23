@@ -69,12 +69,34 @@ export type PlanData = {
     is_active: boolean;
 };
 
+export type NotificationData = {
+    type: string;
+    title: string;
+    body: string;
+    action_url?: string;
+    action_label?: string;
+    organization_id?: number;
+    [key: string]: unknown;
+};
+
+export type AppNotification = {
+    id: string;
+    data: NotificationData;
+    created_at: string;
+    read_at: string | null;
+};
+
+export type NotificationsData = {
+    unread_count: number;
+};
+
 export type Auth = {
     user: User;
     current_organization: Organization | null;
     organizations: Organization[];
     organization_permissions: string[];
     billing: BillingData | null;
+    notifications: NotificationsData | null;
 };
 
 export type TwoFactorSetupData = {
