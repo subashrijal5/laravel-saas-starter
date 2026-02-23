@@ -38,8 +38,9 @@ export default function OrganizationMembers({
     const timersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
     useEffect(() => {
+        const timers = timersRef.current;
         return () => {
-            Object.values(timersRef.current).forEach(clearTimeout);
+            Object.values(timers).forEach(clearTimeout);
         };
     }, []);
 
