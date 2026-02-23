@@ -1,4 +1,6 @@
-# SaaS Starter Kit
+# Laravel SaaS Starter Kit
+
+> **Warning:** This project is under active development and not yet production-ready. APIs, database schemas, and configuration formats may change without notice. Use at your own risk.
 
 A Laravel 12 + React 19 + Inertia v2 starter kit with multi-tenant organizations, role-based permissions, and Stripe billing -- all configurable from a single file.
 
@@ -123,6 +125,38 @@ const canCreate = useCanFeature('items', count);
 ```bash
 php artisan test --compact
 ```
+
+## Roadmap
+
+### Completed
+
+- [x] Multi-tenant organizations with personal orgs on signup
+- [x] Configurable roles & permissions with wildcard support
+- [x] Organization switching and member management
+- [x] UUID-based invitations with expiry, resend cooldown, accept/reject
+- [x] Stripe Cashier integration (subscriptions, checkout, billing portal)
+- [x] Config-driven plans with `saas:sync` command
+- [x] Free, fixed, metered, and combination billing models
+- [x] Plan limits & feature gating (middleware, helpers, React hooks)
+- [x] Caching layer for orgs, permissions, plans, and billing
+- [x] Webhook listener with automatic cache invalidation
+- [x] Type-safe billing enums (`BillingPlan`, `BillingFeature`, `BillingMeterKey`)
+- [x] Comprehensive logging & error handling
+- [x] Two-factor authentication (Fortify)
+- [x] 117 feature tests (Pest 4)
+
+### Planned
+
+- [ ] Admin dashboard for managing organizations and users
+- [ ] Ownership transfer between members
+- [ ] API token management (Sanctum)
+- [ ] Usage analytics and billing insights dashboard
+- [ ] Multi-currency support
+- [ ] Webhook retry and failure monitoring
+- [ ] Email templates customization
+- [ ] Audit log for organization actions
+- [ ] Notification preferences per organization
+- [ ] Impersonation for admin support
 
 ## Development
 
