@@ -5,12 +5,15 @@ use App\Enums\BillingFeature;
 use App\Enums\BillingMeterKey;
 use App\Models\Organization;
 use App\Models\Plan;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 if (! function_exists('current_plan')) {
     function current_plan(): ?Plan
     {
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
         return $user?->currentOrganization?->currentPlan();
     }
@@ -19,7 +22,8 @@ if (! function_exists('current_plan')) {
 if (! function_exists('plan_limit')) {
     function plan_limit(BillingFeature|string $feature): ?int
     {
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
         return $user?->currentOrganization?->planLimit($feature);
     }
@@ -28,7 +32,8 @@ if (! function_exists('plan_limit')) {
 if (! function_exists('within_limit')) {
     function within_limit(BillingFeature|string $feature, int $count): bool
     {
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
 
         return $user?->currentOrganization?->withinLimit($feature, $count) ?? false;
     }
@@ -37,7 +42,8 @@ if (! function_exists('within_limit')) {
 if (! function_exists('report_usage')) {
     function report_usage(BillingMeterKey|string $meter, int $qty = 1): void
     {
-        $user = auth()->user();
+        /** @var User|null $user */
+        $user = Auth::user();
         $organization = $user?->currentOrganization;
 
         if (! $organization) {
@@ -60,7 +66,8 @@ if (! function_exists('clear_billing_cache')) {
                 return;
             }
 
-            $user = auth()->user();
+            /** @var User|null $user */
+            $user = Auth::user();
             $user?->currentOrganization?->clearBillingCache();
         } catch (\Exception $e) {
             Log::warning('Billing: Failed to clear billing cache via helper', [
