@@ -162,6 +162,5 @@ test('unread notifications count is shared via inertia', function () {
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->where('auth.notifications.unread_count', 2)
-            ->has('auth.notifications.recent', 2)
         );
 });

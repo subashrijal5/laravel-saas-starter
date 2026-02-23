@@ -89,7 +89,7 @@ class CheckUsageLimitsCommand extends Command
                 'feature' => $feature->value,
                 'current_usage' => $currentUsage,
                 'limit' => $limit,
-                'percentage' => $threshold,
+                'percentage' => $percentage,
             ]);
         }
 

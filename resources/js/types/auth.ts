@@ -88,7 +88,6 @@ export type AppNotification = {
 
 export type NotificationsData = {
     unread_count: number;
-    recent: AppNotification[];
 };
 
 export type Auth = {

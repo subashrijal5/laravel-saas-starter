@@ -8,6 +8,10 @@ import {
     UserPlus,
 } from 'lucide-react';
 import { useState } from 'react';
+import {
+    markAsRead,
+    markAllAsRead,
+} from '@/actions/App/Http/Controllers/NotificationController';
 import { Button } from '@/components/ui/button';
 import {
     Popover,
@@ -15,11 +19,8 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { index as notificationsIndex } from '@/routes/notifications';
-import {
-    markAsRead,
-    markAllAsRead,
-} from '@/actions/App/Http/Controllers/NotificationController';
 import type { AppNotification } from '@/types';
 
 function notificationIcon(type: string) {
@@ -102,13 +103,27 @@ function NotificationItem({
     );
 }
 
+function NotificationSkeleton() {
+    return (
+        <div className="flex items-start gap-3 p-3">
+            <Skeleton className="mt-0.5 size-4 shrink-0 rounded-full" />
+            <div className="min-w-0 flex-1 space-y-2">
+                <Skeleton className="h-3.5 w-3/4" />
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-2.5 w-16" />
+            </div>
+        </div>
+    );
+}
+
 export function NotificationBell() {
-    const { auth } = usePage().props;
+    const page = usePage();
+    const { auth } = page.props;
     const [open, setOpen] = useState(false);
 
-    const notifications = auth.notifications;
-    const unreadCount = notifications?.unread_count ?? 0;
-    const recentNotifications = notifications?.recent ?? [];
+    const unreadCount = auth.notifications?.unread_count ?? 0;
+    const recentNotifications = page.props.recent_notifications as AppNotification[] | undefined;
+    const isLoading = recentNotifications === undefined;
 
     const handleMarkAllRead = () => {
         router.post(markAllAsRead.url(), {}, { preserveScroll: true });
@@ -146,7 +161,13 @@ export function NotificationBell() {
                 </div>
                 <Separator />
                 <div className="max-h-80 overflow-y-auto">
-                    {recentNotifications.length > 0 ? (
+                    {isLoading ? (
+                        <div className="p-1">
+                            <NotificationSkeleton />
+                            <NotificationSkeleton />
+                            <NotificationSkeleton />
+                        </div>
+                    ) : recentNotifications.length > 0 ? (
                         <div className="p-1">
                             {recentNotifications.map((notification) => (
                                 <NotificationItem
