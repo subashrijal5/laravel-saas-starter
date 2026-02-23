@@ -49,7 +49,6 @@ class OrganizationController extends Controller
 
         return Inertia::render('organizations/settings', [
             'organization' => $organization,
-            'permissions' => $request->user()->resolveOrganizationPermissions(),
         ]);
     }
 

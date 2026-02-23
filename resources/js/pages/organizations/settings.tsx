@@ -1,5 +1,9 @@
 import { Transition } from '@headlessui/react';
 import { Form, Head, router } from '@inertiajs/react';
+import {
+    update,
+    destroy,
+} from '@/actions/App/Http/Controllers/Organization/OrganizationController';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import PermissionGate from '@/components/permission-gate';
@@ -9,17 +13,11 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import type { BreadcrumbItem, Organization } from '@/types';
-import {
-    update,
-    destroy,
-} from '@/actions/App/Http/Controllers/Organization/OrganizationController';
 
 export default function OrganizationSettings({
     organization,
-    permissions,
 }: {
     organization: Organization;
-    permissions: string[];
 }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
