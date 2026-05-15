@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+ SHELL := /bin/bash
 DOCKER_COMPOSE := docker compose
 
 .PHONY: help up down restart logs ps build shell-app \
