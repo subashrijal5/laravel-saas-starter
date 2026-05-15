@@ -30,6 +30,25 @@ php artisan migrate
 npm run build
 ```
 
+## Docker Quick Start (Recommended)
+
+```bash
+cp .env.example .env
+docker compose up -d --build
+docker compose exec app composer install
+npm install
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+```
+
+Run day-to-day commands:
+
+```bash
+docker compose exec app php artisan test --compact
+docker compose exec app php artisan saas:sync
+npm run build
+```
+
 ## Configuration
 
 Everything lives in `config/saas.php`:
